@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/control.css') }}">
+<script src="{{ url_for('static', filename='scripts/countdown.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/control.js') }}"></script>
+<script>
+
+
+    function check_marks(player, life, lives_amount){
+        if (document.getElementById("player_" + player + "_" + life + "_lives").checked){
+            document.getElementById("player_" + player + "_" + life + "_heart").src = "{{url_for('static', filename='Heart.png')}}"
+        }else{
+            document.getElementById("player_" + player + "_" + life + "_heart").src = "{{url_for('static', filename='Empty_Heart.png')}}"
+        }
+        for (let i = 0; i < lives_amount; i++) {
+            if(document.getElementById("player_" + player + "_" + i + "_lives").checked){
+                document.getElementById("player_" + player + "_cam").style.visibility = "visible"
+                return
+            }
+        }
+        document.getElementById("player_" + player + "_cam").style.visibility = "hidden"
+    }
+
+    function start(lives_amount, player_amount){
+
+        var data = {
+            player_list: []
+        }
+        for (let i = 0; i < player_amount; i++) {
+            let dead = true
+            console.log(lives_amount)
+            for (let j = 0; j < lives_amount; j++) {
+                console.log(document.getElementById("player_" + i + "_" + j + "_lives"));
+                if(document.getElementById("player_" + i + "_" + j + "_lives").checked){
+                    dead = false
+                    break
+                }
+            }
+            if (!dead){
+                data["player_list"].push(i)
+            }
+        }
+        var xhr = new XMLHttpRequest();
+
+        var json = JSON.stringify(data);
+
+        xhr.open("POST", "http://127.0.0.1:5000/poll/start", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(json);
+    }
+
+    function reset(){
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://127.0.0.1:5000/poll/reset", true);
+        xhr.send();
+    }
+
+    function stop(){
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://127.0.0.1:5000/poll/stop", true);
+        xhr.send();
+    }
+
+    function show_chat_votes() {
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState !== 4) return;
+
+            if (this.status === 200) {
+                var data = JSON.parse(this.responseText);
+                for (let i = 0; i < {{ player_list|length }}; i++) {
+                    temp_element = document.getElementById("chat_" + i + "_vote")
+                    if(temp_element.style.visibility ==="visible"){
+                        temp_element.style.visibility = "hidden"
+                        temp_element.innerText = data[i] + " votes"
+                        document.getElementById("show_chat_ergs_btn").style.backgroundColor = "red";
+                    }else{
+                        temp_element.innerText = data[i] + " votes"
+                        temp_element.style.visibility = "visible"
+                        document.getElementById("show_chat_ergs_btn").style.backgroundColor = "green";
+                        mark_player_in_danger()
+                    }
+                }
+            }
+        };
+
+        xhr.open('GET', "http://127.0.0.1:5000/get_chat_results", true);
+        xhr.send();
+
+    }
+
+    function reload_player_and_chat_votes() {
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState !== 4) return;
+
+            if (this.status === 200) {
+                var data = JSON.parse(this.responseText);
+                votes = data
+                for (let i = 0; i < {{ player_list|length }}; i++) {
+                    temp_element = document.getElementById("chat_" + i + "_vote")
+                    temp_element.innerText = data[i] + " votes"
+                }
+            }
+        };
+
+        xhr.open('GET', "http://127.0.0.1:5000/get_chat_results", true);
+        xhr.send();
+
+        var xhr1 = new XMLHttpRequest();
+        xhr1.onreadystatechange = function () {
+            if (this.readyState !== 4) return;
+
+            if (this.status === 200) {
+                var data = JSON.parse(this.responseText);
+                for (let i = 0; i < {{ player_list|length }}; i++) {
+                    temp_element = document.getElementById("player_" + i + "_vote")
+                    if (data[i] === ""){
+                        temp_element.innerText = ""
+                        temp_element.style.display = "none"
+                    }else{
+                        temp_element.innerText = "Voted for: " + data[i]
+                        temp_element.style.display = "block"
+                    }
+                }
+            }
+        };
+
+        xhr1.open('GET', "http://127.0.0.1:5000/get_player_results", true);
+        xhr1.send();
+
+
+        mark_player_in_danger()
+
+    }
+
+    function show_player_votes() {
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState !== 4) return;
+
+            if (this.status === 200) {
+                var data = JSON.parse(this.responseText);
+                for (let i = 0; i < {{ player_list|length }}; i++) {
+                    temp_element = document.getElementById("player_" + i + "_vote")
+                    if(temp_element.style.visibility === "visible"){
+                        temp_element.style.visibility = "hidden"
+                        if (data[i] === ""){
+                            temp_element.style.display = "none"
+                            temp_element.innerText = ""
+                        }else{
+                            temp_element.innerText = "Voted for: " + data[i]
+                            temp_element.style.display = "block"
+                        }
+                        document.getElementById("show_player_ergs_btn").style.backgroundColor = "red";
+                    }else{
+                        if (data[i] === ""){
+                            temp_element.style.display = "none"
+                            temp_element.innerText = ""
+                        }else{
+                            temp_element.innerText = "Voted for: " + data[i]
+                            temp_element.style.display = "block"
+                        }
+                        temp_element.style.visibility = "visible"
+                        document.getElementById("show_player_ergs_btn").style.backgroundColor = "green";
+                        mark_player_in_danger()
+                    }
+                }
+            }
+        };
+
+        xhr.open('GET', "http://127.0.0.1:5000/get_player_results", true);
+        xhr.send();
+    }
+
+
+    function mark_player_in_danger(){
+        /*var xhr2 = new XMLHttpRequest();
+        xhr2.onreadystatechange = function () {
+            if (this.readyState !== 4) return;
+
+            if (this.status === 200) {
+                var data = JSON.parse(this.responseText);
+                console.log(data)
+                let max_value = Math.max(...data)
+                if (max_value !== 0){
+                    for (let i = 0; i < data.length; i++) {
+                        if (data[i] === max_value) {
+                            document.getElementById("player_" + i + "_blink").classList.add("blink")
+                        }else{
+                            if ("blink" in document.getElementById("player_" + i + "_blink").classList){
+                                document.getElementById("player_" + i + "_blink").classList.remove("blink")
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        };
+
+        xhr2.open('GET', "http://127.0.0.1:5000/get_danger_player", true);
+        xhr2.send();
+
+         */
+    }
+
+</script>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titel }}</title>
+</head>
+<body>
+    {% for i in range(player_list|length) %}
+    <div class="player_settings">
+        <a>{{ player_list[i]["DisplayName"] }}</a>
+        <input type="text" id="player_{{ i }}_twitch_name_url" class="player_twitch_name_input" value="{{ player_list[i]["twitch_name"] }}">
+        {% for j in range(player_lifes) %}
+        <input type="checkbox" checked="checked" id="player_{{ i }}_{{ j }}_lives" class="lives" onclick="check_marks({{ i }}, {{ j }}, {{ player_lifes }})">
+        {% endfor %}
+        <input type="text" id="player_{{ i }}_url" class="player_url_input" value="{{ player_list[i]["cam_url"] }}">
+    </div>
+    {% endfor %}
+
+    <div class="player_settings">
+        <a>{{ host["DisplayName"] }}</a>
+
+        <input type="text" id="host_url" class="player_url_input" value="{{ host["cam_url"] }}">
+    </div>
+
+
+    <button id="reload_url_button" onclick="reload_urls()">load cams</button>
+    <button id="reload_url_button" onclick="reload_all_urls()">reload cams</button>
+
+    <embed src="/twitch_reader" style="width:100%">
+
+    <div>
+        <button name="start" type="submit" id="start_poll_btn" onclick="start({{ player_lifes }}, {{ player_list | length }})">start Poll</button>
+        <button name="stop" type="submit" id="stop_poll_btn" onclick="stop()">stop Poll</button>
+        <button name="reset" type="submit" id="reset_poll_btn" onclick="reset()">reset Poll</button>
+    </div>
+
+    <div style="margin: 1em">
+        <button name="show_chat_ergs" id="show_chat_ergs_btn" type="submit" onclick="show_chat_votes()">Chat Votes</button>
+        <button name="show_player_ergs" id="show_player_ergs_btn" type="submit" onclick="show_player_votes()">Player Votes</button>
+        <button name="reload_ergs" id="reload_ergs_btn" type="submit" onclick="reload_player_and_chat_votes()">Reload all Votes</button>
+    </div>
+
+
+    <div>
+        <div style="width: 100%" class="input">
+            Countdown <input id="countdown_min" type="text" value="{{countdown_min}}" style="width:5em">
+            <input id="countdown_sec" type="text" value="{{countdown_sec}}" style="width:5em">
+            <button id="countdown_start_stop" class="unloaded" onclick="countdown_start_stop()">Start</button>
+            <button onclick="countdown.clear()">Reset</button>
+        </div>
+    </div>
+
+    <div class="player_cams">
+
+        {% for i in range(player_list|length) %}
+        <div class="player_{{ i }}_embedded cam">
+            <embed id="player_{{ i }}_cam" src="{{ player_list[i]["cam_url"] }}" style="width:624px; height: 351px;">
+                <div class="bottom-left text-over-cam player_vote" id="player_{{ i }}_vote"></div>
+                <div class="upper-left text-over-cam chat_vote" id="chat_{{ i }}_vote"></div>
+                <div id="player_{{ i }}_blink"></div>
+            <div class="upper-right text-over-cam">
+                {% for j in range(player_lifes) %}
+                    <img id="player_{{ i }}_{{  j  }}_heart" src="{{url_for('static', filename='Heart.png')}}" width="15px" height="15px" />
+                {% endfor %}
+            </div>
+            <a class="bottom-right text-over-cam">{{ player_list[i]["DisplayName"] }}</a>
+        </div>
+        {% endfor %}
+
+        <div class="host_embedded cam">
+            <embed id="host_cam" src="{{  host["cam_url"]  }}" style="width:624px; height: 351px;">
+            <a class="bottom-right">HOST({{ host["DisplayName"] }})</a>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="timer">
+        <a id="countdown_minuten">{{ countdown_min }}</a>:<a id="countdown_sekunden">{{ countdown_sec }}</a><a style="display: none" id="countdown_msekunden">00</a>
+    </div>
+</body>

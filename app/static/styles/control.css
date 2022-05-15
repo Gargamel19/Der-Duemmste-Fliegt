@@ -1,0 +1,295 @@
+:root {
+    --big_font: 18px;
+    --medium_font: 15px;
+    --small_font: 12px;
+    --standard_margin: 6px;
+    --header_size: 28px;
+}
+
+::-webkit-scrollbar{
+    width: 0px;
+}
+
+header{
+    position:fixed;
+    width: calc(100% - 10px);
+    height: var(--header_size);
+    padding: var(--standard_margin);
+    border-bottom: 1px solid #707070;
+    background-color: #1f1e1f;
+}
+#header_spacer {
+    height: calc(var(--header_size) + 2*var(--standard_margin));
+}
+body{
+    color: #d2d2d2;
+    margin: 0;
+    background-color: #1f1e1f;
+    font-size: var(--big_font);
+    font-family: "Segoe UI";
+}
+.game_title{
+    float: left;
+}
+.game_control{
+    float: right;
+}
+.panel{
+    box-shadow: 6px 6px 6px 6px rgba(0,0,0,0.15) inset;
+    border: 1px solid #707070;
+    border-radius: 10px;
+    margin: var(--standard_margin);
+    background: rgb(33,33,33);
+    background: linear-gradient(300deg, rgba(33,33,33,1) 0%, rgba(26,26,26,1) 100%);
+}
+.panel_titel{
+    margin: var(--standard_margin);
+}
+.panel_text{
+    margin: var(--standard_margin);
+}
+
+.panel_sub_text,
+.answer_panel_text,
+.panel_shown_text{
+    font-size: var(--small_font);
+    margin: var(--standard_margin);
+}
+.panel_hidden_text{
+    display: none;
+    font-size: var(--small_font);
+    margin: var(--standard_margin);
+}
+.head{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: var(--standard_margin);
+}
+.win_left{
+    background: rgb(31,30,31);
+    background: linear-gradient(270deg, rgba(31,30,31,1) 46%, rgba(39,50,37,1) 61%, rgba(48,70,44,1) 75%, rgba(56,88,50,1) 85%, rgba(69,120,60,1) 94%, rgba(96,183,80,1) 100%);
+}
+.win_right{
+    background: rgb(31,30,31);
+    background: linear-gradient(90deg, rgba(31,30,31,1) 46%, rgba(39,50,37,1) 61%, rgba(48,70,44,1) 75%, rgba(56,88,50,1) 85%, rgba(69,120,60,1) 94%, rgba(96,183,80,1) 100%);
+}
+.row{
+    font-size: var(--small_font);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: var(--standard_margin);
+}
+
+.countdown_value_input{
+    width: 100%;
+}
+
+textarea{
+    color: #d2d2d2;
+    box-sizing: border-box;
+    border-radius: 5px;
+    background: rgb(29,29,29);
+    background: linear-gradient(0deg, rgba(29,29,29,1) 0%, rgba(39,39,39,1) 100%);
+    border: 1px solid #707070;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+input[type=text]{
+    color: #d2d2d2;
+    box-sizing: border-box;
+    border-radius: 5px;
+    background: rgb(29,29,29);
+    background: linear-gradient(0deg, rgba(29,29,29,1) 0%, rgba(39,39,39,1) 100%);
+    border: 1px solid #707070;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+.countdown{
+}
+
+.timer{
+    text-align: center;
+    font-size: 100px;
+}
+
+.minus_game{
+    height: 1.5em;
+    width: 1.5em;
+    margin: 0;
+}
+
+.plus_game{
+    height: 1.5em;
+    width: 1.5em;
+    margin: 0;
+
+}
+
+button{
+    background: rgb(61,61,61);
+    background: linear-gradient(0deg, rgba(61,61,61,1) 0%, rgba(38,38,38,1) 100%);
+    color: #d2d2d2;
+    border: 1px solid #707070;
+    border-radius: 5px;
+}
+button:hover {
+    background: rgb(83,83,83);
+    background: linear-gradient(0deg, rgba(83,83,83,1) 0%, rgba(46,46,46,1) 100%);
+    color: white;
+}
+button:active {
+    background: rgb(29, 29, 29);
+    background: linear-gradient(0deg, rgba(29, 29, 29, 1) 0%, rgba(39, 39, 39, 1) 100%);
+}
+.winner_player_button{
+    background: rgb(00,200,00);
+    background: linear-gradient(0deg, rgba(00,200,00,1) 0%, rgba(39,39,39,1) 100%);
+}
+.looser_player_button{
+    background: rgb(00,00,00);
+    background: linear-gradient(0deg, rgba(00,00,00,1) 0%, rgba(39,39,39,1) 100%);
+}
+
+.selected_game_button {
+    background: rgb(00,200,00);
+    background: linear-gradient(0deg, rgba(00,200,00,1) 0%, rgba(39,39,39,1) 100%);
+}
+.selected_game_button:hover{
+    background: rgb(00,255,00);
+    background: linear-gradient(0deg, rgba(00,255,00,1) 0%, rgba(39,39,39,1) 100%);
+    color: white;
+}
+.deselected_game_button {
+    background: rgb(00,00,00);
+    background: linear-gradient(0deg, rgba(00,00,00,1) 0%, rgba(39,39,39,1) 100%);
+}
+.deselected_game_button:hover{
+    background: rgb(20,20,20);
+    background: linear-gradient(0deg, rgba(20,20,20,1) 0%, rgba(39,39,39,1) 100%);
+    color: white;
+}
+.games{
+    width: 150px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.game_button{
+    text-align: center;
+    width: 26px;
+    margin: 2px;
+}
+.score_player{
+    font-size: var(--big_font);
+    text-align: center;
+}
+.reset_score_button{
+    height: 20px;
+    bottom:0;
+    vertical-align: bottom;
+}
+.score_runde{
+    font-size: var(--big_font);
+}
+
+.player_url_input{
+    float: right;
+    width: 50%;
+}
+
+.player_settings{
+    width: 100%;
+}
+.player_cams{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+ }
+.cam{
+    position: relative;
+    width: 640px;
+    height: 360px;
+}
+.bottom-right {
+    position: absolute;
+    bottom: 16px;
+    right: 32px;
+}
+.bottom-left {
+    position: absolute;
+    bottom: 16px;
+    left: 32px;
+}
+.upper-right{
+    position: absolute;
+    top: 16px;
+    right: 32px;
+}
+.upper-left{
+    position: absolute;
+    top: 16px;
+    left: 32px;
+}
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.player_score{
+    width: 100%;
+ }
+.blink {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: red;
+    opacity: 0.3;
+}
+.text-over-cam{
+    background-color: #1f1e1f;
+    color: #d2d2d2;
+    padding: 0.5em;
+}
+.player_vote{
+    visibility: hidden;
+}
+.chat_vote{
+    visibility: hidden;
+}
+#show_chat_ergs_btn{
+    background: red;
+    height: 100px;
+    width: 100px;
+}
+#show_player_ergs_btn{
+    background: red;
+    height: 100px;
+    width: 100px;
+}
+#reload_ergs_btn{
+    height: 100px;
+    width: 100px;
+}
+#start_poll_btn{
+    background: darkgreen;
+    height: 100px;
+    width: 100px;
+}
+#stop_poll_btn{
+    background: red;
+    height: 100px;
+    width: 100px;
+}
+#reset_poll_btn{
+    height: 100px;
+    width: 100px;
+}
