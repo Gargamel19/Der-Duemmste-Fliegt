@@ -10,15 +10,15 @@
         <div class="player_{{ i }}">
         {% if i in index_of_max %}
             {% if player_list[i]["pick"] == "" %}
-                PlayerVotes: <a style="color: darkgreen">{{ votes[i] }} (+1)</a> - <a style="color: darkorange">ChatVotes: {{ player_list[i]["votes"] | length }}</a> <a style="float: right {% if i in in_danger %}; color: darkred {% endif %}">{{ player_list[i]["DisplayName"] }}</a>
+                PlayerVotes: <a style="color: darkgreen">{{ votes[i] }} (+1)</a> - <a style="color: darkorange">ChatVotes: {{ player_list[i]["votes"]  }}</a> <a style="float: right {% if i in in_danger %}; color: darkred {% endif %}">{{ player_list[i]["DisplayName"] }}</a>
             {% else %}
-                PlayerVotes: <a style="color: darkgreen">{{ votes[i] }} (+1)</a> - <a style="color: darkorange">ChatVotes: {{ player_list[i]["votes"] | length }}</a> <a style="float: right {% if i in in_danger %}; color: darkred {% endif %}"> Pick: {{ player_list[player_list[i]["pick"] | int]["DisplayName"] }} | {{ player_list[i]["DisplayName"] }}</a>
+                PlayerVotes: <a style="color: darkgreen">{{ votes[i] }} (+1)</a> - <a style="color: darkorange">ChatVotes: {{ player_list[i]["votes"]  }}</a> <a style="float: right {% if i in in_danger %}; color: darkred {% endif %}"> Pick: {{ player_list[player_list[i]["pick"] | int]["DisplayName"] }} | {{ player_list[i]["DisplayName"] }}</a>
             {% endif %}
         {% else %}
             {% if player_list[i]["pick"] == "" %}
-                PlayerVotes: <a style="color: darkgreen">{{ votes[i] }}</a> - ChatVotes: {{ player_list[i]["votes"] | length }} <a style="float: right {% if i in in_danger %}; color: darkred {% endif %}">{{ player_list[i]["DisplayName"] }}</a>
+                PlayerVotes: <a style="color: darkgreen">{{ votes[i] }}</a> - ChatVotes: {{ player_list[i]["votes"]  }} <a style="float: right {% if i in in_danger %}; color: darkred {% endif %}">{{ player_list[i]["DisplayName"] }}</a>
             {% else %}
-                PlayerVotes: <a style="color: darkgreen">{{ votes[i] }}</a> - ChatVotes: {{ player_list[i]["votes"] | length }} <a style="float: right {% if i in in_danger %}; color: darkred {% endif %}"> Pick: {{ player_list[player_list[i]["pick"] | int]["DisplayName"] }} | {{ player_list[i]["DisplayName"] }}</a>
+                PlayerVotes: <a style="color: darkgreen">{{ votes[i] }}</a> - ChatVotes: {{ player_list[i]["votes"]  }} <a style="float: right {% if i in in_danger %}; color: darkred {% endif %}"> Pick: {{ player_list[player_list[i]["pick"] | int]["DisplayName"] }} | {{ player_list[i]["DisplayName"] }}</a>
             {% endif %}
         {% endif %}
         </div>
