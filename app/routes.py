@@ -3,17 +3,17 @@ import os
 from flask import render_template, jsonify, request
 
 import app
-from app.chat_reader import ChatReader
+from app.chat_reader import ChatReader2
 
 player = [
-    {"DisplayName": "FettarmQP", "twitch_name": "fettarmqp", "vote_number": "0", "votes": [], "cam_url": "https://vdo.ninja/?view=ymZU5Ac", "pick": ""},
-    {"DisplayName": "Ede", "twitch_name": "sauerteigpizza", "vote_number": "1", "votes": [], "cam_url": "https://vdo.ninja/?view=LDXUpTf", "pick": ""},
-    {"DisplayName": "Jan", "twitch_name": "janbrua", "vote_number": "2", "votes": [], "cam_url": "https://vdo.ninja/?view=pSwLsG5", "pick": ""},
-    {"DisplayName": "Ganzling", "twitch_name": "ganzling", "vote_number": "3", "votes": [], "cam_url": "https://vdo.ninja/?view=7rAwuXK", "pick": ""},
-    {"DisplayName": "Fall1ngTV", "twitch_name": "fall1ngtv", "vote_number": "4", "votes": [], "cam_url": "https://vdo.ninja/?view=bQ9FKQd", "pick": ""}
+    {"DisplayName": "FettarmQP", "twitch_name": "fettarmqp", "vote_number": "0", "votes": 0, "cam_url": "https://vdo.ninja/?view=ymZU5Ac", "pick": ""},
+    {"DisplayName": "Ede", "twitch_name": "sauerteigpizza", "vote_number": "1", "votes": 0, "cam_url": "https://vdo.ninja/?view=LDXUpTf", "pick": ""},
+    {"DisplayName": "Tux", "twitch_name": "tuxmania", "vote_number": "2", "votes": 0, "cam_url": "https://vdo.ninja/?view=pSwLsG5", "pick": ""},
+    {"DisplayName": "Ganzling", "twitch_name": "ganzling", "vote_number": "3", "votes": 0, "cam_url": "https://vdo.ninja/?view=7rAwuXK", "pick": ""},
+    {"DisplayName": "Fall1ngTV", "twitch_name": "fall1ngtv", "vote_number": "4", "votes": 0, "cam_url": "https://vdo.ninja/?view=bQ9FKQd", "pick": ""}
 ]
 
-# dead player not voatable
+# dead player not voteable
 
 host = {"DisplayName": "Pydracor", "twitch_name": "Pydracor", "cam_url": "https://vdo.ninja/?view=WeVbH7G"}
 
@@ -39,10 +39,10 @@ def read_chat():
     max_chat_votes_value = 0
     max_chat_votes_index = []
     for i in range(len(player)):
-        if len(player[i]["votes"]) > max_chat_votes_value:
-            max_chat_votes_value = len(player[i]["votes"])
+        if (player[i]["votes"]) > max_chat_votes_value:
+            max_chat_votes_value = (player[i]["votes"])
             max_chat_votes_index = [i]
-        elif len(player[i]["votes"]) == max_chat_votes_value:
+        elif (player[i]["votes"]) == max_chat_votes_value:
             max_chat_votes_index.append(i)
 
     if max_chat_votes_value == 0:
@@ -69,25 +69,34 @@ def read_chat():
 @app.app.route("/poll/start", methods=['POST'])
 def start_read_chat():
     content = request.json
-    app.chat_reader = ChatReader(os.environ.get("CHANEL"), os.environ.get("NICKNAME"), os.environ.get("TOKEN"), player, content["player_list"])
-    app.chat_reader.start()
+    #app.bot = ChatReader2(os.environ.get("CHANEL"), os.environ.get("NICKNAME"), os.environ.get("TOKEN"), player, content["player_list"])
+    for temp_player in player:
+        temp_player["pick"] = ""
+        temp_player["votes"] = 0
+
+    
+    app.bot = ChatReader2("#tuxmania", "tuxmania", "oauth:9lf9s03zpclk0t550f6hhl858ibbhb", player, content["player_list"])
+    app.bot.run()
+
+    
+
     return "started Reading Chat"
 
 
 @app.app.route("/poll/stop", methods=['POST'])
 def stop_read_chat():
-    if app.chat_reader:
-        app.chat_reader.kill()
-        return "stopped Reading Chat"
-    else:
-        return "poll was not started"
+    app.bot.kill()
+
+
+
+    return "stopped Reading Chat"
 
 
 @app.app.route("/poll/reset", methods=['POST'])
 def restart_read_chat():
     for temp_player in player:
         temp_player["pick"] = ""
-        temp_player["votes"] = []
+        temp_player["votes"] = 0
     return "Resettet Poll"
 
 
@@ -95,7 +104,7 @@ def restart_read_chat():
 def get_chat_results():
     erg_list = []
     for temp_player in player:
-        erg_list.append(len(temp_player["votes"]))
+        erg_list.append(temp_player["votes"])
     return jsonify(erg_list)
 
 
