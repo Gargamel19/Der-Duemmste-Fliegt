@@ -69,13 +69,12 @@ def read_chat():
 @app.app.route("/poll/start", methods=['POST'])
 def start_read_chat():
     content = request.json
-    #app.bot = ChatReader2(os.environ.get("CHANEL"), os.environ.get("NICKNAME"), os.environ.get("TOKEN"), player, content["player_list"])
     for temp_player in player:
         temp_player["pick"] = ""
         temp_player["votes"] = 0
 
     
-    app.bot = ChatReader2("#tuxmania", "tuxmania", "oauth:9lf9s03zpclk0t550f6hhl858ibbhb", player, content["player_list"])
+    app.bot = ChatReader2(os.environ.get("CHANEL"), os.environ.get("NICKNAME"), os.environ.get("TOKEN"), player, content["player_list"])
     app.bot.run()
 
     

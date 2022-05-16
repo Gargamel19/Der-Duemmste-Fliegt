@@ -8,9 +8,9 @@ class ChatReader2(commands.Bot):
 
     server = "irc.chat.twitch.tv"
     port = 6667
-    nick = "tuxmania"
+    nick = "fettarmqp"
     secret = ""
-    channel = "#tuxmania"
+    channel = "#fettarmqp"
     running = True
     player = {}
     player_in = []
